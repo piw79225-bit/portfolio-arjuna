@@ -1,0 +1,7 @@
+{
+  "name": "Arjuna | Laboratorium Teknologi ID",
+  "description": "Portofolio profesional Arjuna dengan tema Laboratorium Teknologi ID, menampilkan inovasi dalam ekosistem digital.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
