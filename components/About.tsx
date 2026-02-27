@@ -34,7 +34,7 @@ const About: React.FC<AboutProps> = ({ settings }) => {
 
           <div className="lg:col-span-7">
             <h2 className="text-sm font-bold tracking-[0.4em] text-cyan-500 uppercase mono mb-6 flex items-center gap-3">
-              <span className="w-12 h-[1px] bg-cyan-500"></span> {settings.sectionTitle}
+              <span className="w-12 h-[1px] bg-cyan-500"></span> {settings.sectionSubtitle} — {settings.sectionTitle}
             </h2>
             <h3 className="text-4xl md:text-6xl font-black mb-10 text-white leading-tight uppercase tracking-tighter">
               {settings.title} <span className="text-cyan-400 italic glow-text">{settings.highlight}</span>
