@@ -131,7 +131,7 @@ const Projects: React.FC<ProjectsProps> = ({ projects, config }) => {
                 srcDoc={viewingHtml} 
                 title="Portfolio Preview" 
                 className="w-full h-full border-none"
-                sandbox="allow-scripts"
+                sandbox="allow-scripts allow-forms allow-popups allow-modals"
               />
             </div>
           </div>

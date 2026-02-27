@@ -277,7 +277,18 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, onUpdate }) => {
                       onChange={handleHtmlUpload}
                       className="w-full bg-slate-900/50 border border-slate-800 rounded-xl px-4 py-3 text-sm file:bg-cyan-500 file:border-none file:rounded-md file:text-[10px] file:font-black file:uppercase file:px-3 file:py-1 file:mr-4 file:cursor-pointer" 
                     />
-                    {workForm.htmlContent && <p className="text-[9px] text-green-500 mono">HTML Content Loaded ({workForm.htmlContent.length} chars)</p>}
+                    {workForm.htmlContent && (
+                      <div className="flex items-center justify-between">
+                        <p className="text-[9px] text-green-500 mono">HTML Content Loaded ({workForm.htmlContent.length} chars)</p>
+                        <button 
+                          type="button"
+                          onClick={() => setWorkForm({ ...workForm, htmlContent: '' })}
+                          className="text-[9px] text-red-500 uppercase font-bold hover:underline"
+                        >
+                          Hapus HTML
+                        </button>
+                      </div>
+                    )}
                   </div>
 
                   <textarea className="w-full bg-slate-900/50 border border-slate-800 rounded-xl px-4 py-3 text-sm h-24" placeholder="Deskripsi" value={workForm.description} onChange={e => setWorkForm({...workForm, description: e.target.value})} />
