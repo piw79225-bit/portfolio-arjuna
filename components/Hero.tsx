@@ -58,7 +58,7 @@ const Hero: React.FC<HeroProps> = ({ settings, onNavigate }) => {
             className="group relative px-12 py-5 bg-cyan-500 text-slate-950 font-black rounded-full hover:bg-cyan-400 transition-all uppercase tracking-widest text-sm shadow-xl shadow-cyan-500/20"
           >
             <span className="relative z-10 flex items-center gap-3">
-              Jelajahi Projek <i className="fa-solid fa-arrow-right-long group-hover:translate-x-2 transition-transform"></i>
+              Jelajahi Portofolio <i className="fa-solid fa-arrow-right-long group-hover:translate-x-2 transition-transform"></i>
             </span>
           </button>
           <button 

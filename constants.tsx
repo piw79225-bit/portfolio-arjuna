@@ -14,7 +14,7 @@ export const PROJECTS: Project[] = [
   {
     id: '1',
     title: 'Sistem Deteksi Isyarat AI',
-    category: 'AI',
+    category: 'AI Specialist',
     description: 'Eksperimen laboratorium dalam pengolahan citra real-time untuk menerjemahkan bahasa isyarat menjadi teks.',
     image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=800',
     tags: ['Python', 'TensorFlow', 'Computer Vision'],
