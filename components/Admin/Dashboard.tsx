@@ -18,7 +18,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, onUpdate }) => {
   
   // CRUD Forms
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [workForm, setWorkForm] = useState<Partial<Project>>({ title: '', category: 'AI Specialist', description: '', image: '', tags: [], link: '' });
+  const [workForm, setWorkForm] = useState<Partial<Project>>({ title: '', category: 'AI Specialist', description: '', image: '', tags: [], link: '', htmlContent: '' });
   const [expertiseForm, setExpertiseForm] = useState<Skill>({ name: '', level: 80, icon: 'fa-solid fa-code' });
   const [roleForm, setRoleForm] = useState<Partial<Role>>({ title: '', description: '', icon: 'fa-solid fa-user-gear' });
 
@@ -52,6 +52,18 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, onUpdate }) => {
     onUpdate();
   };
 
+  const handleHtmlUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const content = event.target?.result as string;
+      setWorkForm({ ...workForm, htmlContent: content });
+      alert('File HTML berhasil dimuat ke memori!');
+    };
+    reader.readAsText(file);
+  };
   // CRUD Works
   const handleSaveWork = async () => {
     if (!workForm.title) return;
@@ -59,7 +71,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, onUpdate }) => {
     const id = editingId || Date.now().toString();
     const newWork = { ...workForm, id, tags: workForm.tags?.length ? workForm.tags : ['Lab'] } as Project;
     await contentService.saveWork(newWork);
-    setWorkForm({ title: '', category: 'AI Specialist', description: '', image: '', tags: [], link: '' });
+    setWorkForm({ title: '', category: 'AI Specialist', description: '', image: '', tags: [], link: '', htmlContent: '' });
     setEditingId(null);
     await refreshData();
   };
@@ -256,9 +268,21 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, onUpdate }) => {
                   </select>
                   <input className="w-full bg-slate-900/50 border border-slate-800 rounded-xl px-4 py-3 text-sm" placeholder="Image URL" value={workForm.image} onChange={e => setWorkForm({...workForm, image: e.target.value})} />
                   <input className="w-full bg-slate-900/50 border border-slate-800 rounded-xl px-4 py-3 text-sm" placeholder="Project Link" value={workForm.link} onChange={e => setWorkForm({...workForm, link: e.target.value})} />
+                  
+                  <div className="space-y-2">
+                    <label className="text-[10px] uppercase mono text-slate-500 font-black">Upload Portofolio HTML</label>
+                    <input 
+                      type="file" 
+                      accept=".html" 
+                      onChange={handleHtmlUpload}
+                      className="w-full bg-slate-900/50 border border-slate-800 rounded-xl px-4 py-3 text-sm file:bg-cyan-500 file:border-none file:rounded-md file:text-[10px] file:font-black file:uppercase file:px-3 file:py-1 file:mr-4 file:cursor-pointer" 
+                    />
+                    {workForm.htmlContent && <p className="text-[9px] text-green-500 mono">HTML Content Loaded ({workForm.htmlContent.length} chars)</p>}
+                  </div>
+
                   <textarea className="w-full bg-slate-900/50 border border-slate-800 rounded-xl px-4 py-3 text-sm h-24" placeholder="Deskripsi" value={workForm.description} onChange={e => setWorkForm({...workForm, description: e.target.value})} />
                   <button onClick={handleSaveWork} disabled={loading} className="w-full py-4 bg-cyan-500 text-slate-950 font-black rounded-xl text-[10px] uppercase tracking-[0.2em]">Upload to Lab Cloud</button>
-                  {editingId && <button onClick={() => {setEditingId(null); setWorkForm({title:'', category:'AI Specialist', description:'', image:'', tags:[], link:''})}} className="w-full py-2 text-slate-500 text-[10px] uppercase font-bold">Batal Edit</button>}
+                  {editingId && <button onClick={() => {setEditingId(null); setWorkForm({title:'', category:'AI Specialist', description:'', image:'', tags:[], link:'', htmlContent: ''})}} className="w-full py-2 text-slate-500 text-[10px] uppercase font-bold">Batal Edit</button>}
                 </div>
               </div>
               <div className="col-span-8 space-y-4">

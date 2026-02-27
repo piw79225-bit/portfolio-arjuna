@@ -8,6 +8,7 @@ interface ProjectsProps {
 
 const Projects: React.FC<ProjectsProps> = ({ projects, config }) => {
   const [activeFilter, setActiveFilter] = useState('All');
+  const [viewingHtml, setViewingHtml] = useState<string | null>(null);
 
   const filtered = activeFilter === 'All' 
     ? projects 
@@ -71,27 +72,71 @@ const Projects: React.FC<ProjectsProps> = ({ projects, config }) => {
                       </span>
                     ))}
                   </div>
-                  {project.link ? (
-                    <a 
-                      href={project.link} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-cyan-400 text-xs font-black uppercase tracking-[0.2em] group/btn"
-                    >
-                      <span>Lihat Projek</span>
-                      <i className="fa-solid fa-arrow-right-long group-hover/btn:translate-x-3 transition-transform"></i>
-                    </a>
-                  ) : (
-                    <button className="flex items-center gap-2 text-slate-600 text-xs font-black uppercase tracking-[0.2em] cursor-not-allowed">
-                      <span>No Link</span>
-                    </button>
-                  )}
+                  <div className="flex items-center gap-4">
+                    {project.htmlContent && (
+                      <button 
+                        onClick={() => setViewingHtml(project.htmlContent || null)}
+                        className="flex items-center gap-2 text-cyan-400 text-xs font-black uppercase tracking-[0.2em] group/btn"
+                      >
+                        <span>Live Demo</span>
+                        <i className="fa-solid fa-laptop-code group-hover/btn:scale-110 transition-transform"></i>
+                      </button>
+                    )}
+                    {project.link ? (
+                      <a 
+                        href={project.link} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-cyan-400 text-xs font-black uppercase tracking-[0.2em] group/btn"
+                      >
+                        <span>Lihat Projek</span>
+                        <i className="fa-solid fa-arrow-right-long group-hover/btn:translate-x-3 transition-transform"></i>
+                      </a>
+                    ) : (
+                      !project.htmlContent && (
+                        <button className="flex items-center gap-2 text-slate-600 text-xs font-black uppercase tracking-[0.2em] cursor-not-allowed">
+                          <span>No Link</span>
+                        </button>
+                      )
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
           ))}
         </div>
       </div>
+
+      {/* HTML Preview Modal */}
+      {viewingHtml && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-10 bg-slate-950/90 backdrop-blur-xl animate-in fade-in zoom-in duration-300">
+          <div className="relative w-full h-full glass rounded-[2.5rem] border-cyan-500/30 overflow-hidden flex flex-col">
+            <div className="p-6 border-b border-slate-800 flex justify-between items-center">
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 bg-cyan-500 rounded-xl flex items-center justify-center text-slate-950 font-black">DEMO</div>
+                <div>
+                  <h4 className="text-white font-black uppercase tracking-widest text-sm">Live Preview Mode</h4>
+                  <p className="text-[10px] text-cyan-500 mono">SANDBOX_ENVIRONMENT_ACTIVE</p>
+                </div>
+              </div>
+              <button 
+                onClick={() => setViewingHtml(null)}
+                className="w-12 h-12 rounded-full bg-slate-900 text-white flex items-center justify-center hover:bg-red-500 transition-colors"
+              >
+                <i className="fa-solid fa-xmark text-xl"></i>
+              </button>
+            </div>
+            <div className="flex-1 bg-white">
+              <iframe 
+                srcDoc={viewingHtml} 
+                title="Portfolio Preview" 
+                className="w-full h-full border-none"
+                sandbox="allow-scripts"
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };

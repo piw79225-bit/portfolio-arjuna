@@ -7,6 +7,7 @@ export interface Project {
   image: string;
   tags: string[];
   link?: string;
+  htmlContent?: string;
 }
 
 export interface NavLink {
