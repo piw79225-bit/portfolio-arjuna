@@ -134,18 +134,19 @@ const App: React.FC = () => {
 
   if (view === 'demo' && demoProject) {
     return (
-      <div className="fixed inset-0 bg-white z-[9999]">
+      <div className="fixed inset-0 bg-black z-[9999] overflow-hidden">
         <iframe 
           srcDoc={demoProject.htmlContent} 
           title={demoProject.title} 
           className="w-full h-full border-none"
-          sandbox="allow-scripts allow-forms allow-popups allow-modals"
+          sandbox="allow-scripts allow-forms allow-popups allow-modals allow-same-origin"
         />
         <button 
           onClick={() => { window.location.pathname = '/'; }}
-          className="fixed top-4 right-4 w-10 h-10 bg-slate-900/80 text-white rounded-full flex items-center justify-center hover:bg-red-500 transition-all z-[10000]"
+          className="fixed top-6 right-6 w-12 h-12 bg-slate-900/90 text-white rounded-full flex items-center justify-center hover:bg-red-500 hover:scale-110 transition-all z-[10000] shadow-2xl border border-white/10"
+          title="Tutup Preview"
         >
-          <i className="fa-solid fa-xmark"></i>
+          <i className="fa-solid fa-xmark text-xl"></i>
         </button>
       </div>
     );

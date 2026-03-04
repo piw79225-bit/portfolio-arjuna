@@ -13,7 +13,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, onUpdate }) => {
   const [expertise, setExpertise] = useState<Skill[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
   const [settings, setSettings] = useState<SiteSettings | null>(null);
-  const [activeTab, setActiveTab] = useState<'hero' | 'about' | 'roles' | 'expertise' | 'works' | 'contact'>('roles');
+  const [activeTab, setActiveTab] = useState<'hero' | 'roles' | 'expertise' | 'works' | 'contact'>('roles');
   const [loading, setLoading] = useState(false);
   
   // CRUD Forms
@@ -137,7 +137,6 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, onUpdate }) => {
             { id: 'expertise', label: '2. Expertise', icon: 'fa-bolt-lightning' },
             { id: 'works', label: '3. Works', icon: 'fa-briefcase' },
             { id: 'hero', label: 'Hero Section', icon: 'fa-rocket' },
-            { id: 'about', label: 'About Section', icon: 'fa-address-card' },
             { id: 'contact', label: 'Contact Section', icon: 'fa-at' },
           ].map((item) => (
             <button key={item.id} onClick={() => { setActiveTab(item.id as any); setEditingId(null); }} className={`w-full flex items-center gap-4 px-6 py-4 rounded-2xl transition-all ${activeTab === item.id ? 'bg-cyan-500 text-slate-950 font-bold' : 'text-slate-400 hover:bg-slate-900/50'}`}>
@@ -264,8 +263,9 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, onUpdate }) => {
                   <input className="w-full bg-slate-900/50 border border-slate-800 rounded-xl px-4 py-3 text-sm" placeholder="Judul Projek" value={workForm.title} onChange={e => setWorkForm({...workForm, title: e.target.value})} />
                   <select className="w-full bg-slate-900/50 border border-slate-800 rounded-xl px-4 py-3 text-sm" value={workForm.category} onChange={e => setWorkForm({...workForm, category: e.target.value as any})}>
                     <option value="AI Specialist">AI Specialist</option>
-                    <option value="Tech Educator">Tech Educator</option>
-                    <option value="Digital Architect">Digital Architect</option>
+                    <option value="Cloud Engineer">Cloud Engineer</option>
+                    <option value="Data Scientist">Data Scientist</option>
+                    <option value="Robotics">Robotics</option>
                   </select>
                   <input className="w-full bg-slate-900/50 border border-slate-800 rounded-xl px-4 py-3 text-sm" placeholder="Image URL" value={workForm.image} onChange={e => setWorkForm({...workForm, image: e.target.value})} />
                   <input className="w-full bg-slate-900/50 border border-slate-800 rounded-xl px-4 py-3 text-sm" placeholder="Project Link" value={workForm.link} onChange={e => setWorkForm({...workForm, link: e.target.value})} />
@@ -327,8 +327,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, onUpdate }) => {
           </div>
         )}
 
-        {/* Editor untuk Hero, About, Contact tetap mirip, namun dengan tombol Save yang memanggil handleSaveSettings */}
-        {(activeTab === 'hero' || activeTab === 'about' || activeTab === 'contact') && (
+        {/* Editor untuk Hero, Contact tetap mirip */}
+        {(activeTab === 'hero' || activeTab === 'contact') && (
           <div className="max-w-4xl animate-in fade-in">
             <h2 className="text-4xl font-black uppercase tracking-tighter mb-10 text-cyan-500">Cloud Editor: {activeTab.toUpperCase()}</h2>
             <form onSubmit={handleSaveSettings} className="space-y-6">
@@ -338,68 +338,6 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, onUpdate }) => {
                     <input className="w-full bg-slate-900/50 border border-slate-800 rounded-xl px-5 py-4 text-sm" value={settings.hero.explorerName} onChange={e => setSettings({...settings, hero: {...settings.hero, explorerName: e.target.value}})} placeholder="Explorer Name" />
                     <input className="w-full bg-slate-900/50 border border-slate-800 rounded-xl px-5 py-4 text-sm" value={settings.hero.typingText} onChange={e => setSettings({...settings, hero: {...settings.hero, typingText: e.target.value}})} placeholder="Typing Text" />
                     <textarea className="w-full bg-slate-900/50 border border-slate-800 rounded-xl px-5 py-4 text-sm h-32" value={settings.hero.description} onChange={e => setSettings({...settings, hero: {...settings.hero, description: e.target.value}})} placeholder="Description" />
-                  </>
-                )}
-                {activeTab === 'about' && (
-                  <>
-                    <div className="grid grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                        <label className="text-[10px] uppercase mono text-slate-500 font-black">Section Title</label>
-                        <input className="w-full bg-slate-900/50 border border-slate-800 rounded-xl px-5 py-4 text-sm" value={settings.about.sectionTitle} onChange={e => setSettings({...settings, about: {...settings.about, sectionTitle: e.target.value}})} placeholder="Section Title" />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-[10px] uppercase mono text-slate-500 font-black">Section Subtitle</label>
-                        <input className="w-full bg-slate-900/50 border border-slate-800 rounded-xl px-5 py-4 text-sm" value={settings.about.sectionSubtitle} onChange={e => setSettings({...settings, about: {...settings.about, sectionSubtitle: e.target.value}})} placeholder="Section Subtitle" />
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                        <label className="text-[10px] uppercase mono text-slate-500 font-black">Main Title</label>
-                        <input className="w-full bg-slate-900/50 border border-slate-800 rounded-xl px-5 py-4 text-sm" value={settings.about.title} onChange={e => setSettings({...settings, about: {...settings.about, title: e.target.value}})} placeholder="Main Title" />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-[10px] uppercase mono text-slate-500 font-black">Highlight Word</label>
-                        <input className="w-full bg-slate-900/50 border border-slate-800 rounded-xl px-5 py-4 text-sm" value={settings.about.highlight} onChange={e => setSettings({...settings, about: {...settings.about, highlight: e.target.value}})} placeholder="Highlight Word" />
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <label className="text-[10px] uppercase mono text-slate-500 font-black">Paragraphs (One per line)</label>
-                      <textarea 
-                        className="w-full bg-slate-900/50 border border-slate-800 rounded-xl px-5 py-4 text-sm h-32" 
-                        value={settings.about.paragraphs.join('\n')} 
-                        onChange={e => setSettings({...settings, about: {...settings.about, paragraphs: e.target.value.split('\n')}})} 
-                        placeholder="Paragraphs" 
-                      />
-                    </div>
-
-                    <div className="space-y-4">
-                      <label className="text-[10px] uppercase mono text-slate-500 font-black">Stats</label>
-                      {settings.about.stats.map((stat, idx) => (
-                        <div key={idx} className="grid grid-cols-2 gap-4">
-                          <input 
-                            className="w-full bg-slate-900/50 border border-slate-800 rounded-xl px-4 py-2 text-sm" 
-                            value={stat.label} 
-                            onChange={e => {
-                              const newStats = [...settings.about.stats];
-                              newStats[idx].label = e.target.value;
-                              setSettings({...settings, about: {...settings.about, stats: newStats}});
-                            }} 
-                            placeholder="Label" 
-                          />
-                          <input 
-                            className="w-full bg-slate-900/50 border border-slate-800 rounded-xl px-4 py-2 text-sm" 
-                            value={stat.value} 
-                            onChange={e => {
-                              const newStats = [...settings.about.stats];
-                              newStats[idx].value = e.target.value;
-                              setSettings({...settings, about: {...settings.about, stats: newStats}});
-                            }} 
-                            placeholder="Value" 
-                          />
-                        </div>
-                      ))}
-                    </div>
                   </>
                 )}
                 {activeTab === 'contact' && (

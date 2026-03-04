@@ -23,7 +23,7 @@ const Projects: React.FC<ProjectsProps> = ({ projects, config }) => {
         </div>
 
         <div className="flex flex-wrap justify-center gap-4 mb-16">
-          {['All', 'AI Specialist', 'Tech Educator', 'Digital Architect'].map((cat) => (
+          {['All', 'AI Specialist', 'Cloud Engineer', 'Data Scientist', 'Robotics'].map((cat) => (
             <button
               key={cat}
               onClick={() => setActiveFilter(cat)}

@@ -2,7 +2,7 @@
 export interface Project {
   id: string;
   title: string;
-  category: 'AI Specialist' | 'Tech Educator' | 'Digital Architect';
+  category: 'AI Specialist' | 'Cloud Engineer' | 'Data Scientist' | 'Robotics';
   description: string;
   image: string;
   tags: string[];
