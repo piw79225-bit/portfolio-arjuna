@@ -8,6 +8,7 @@ export interface Project {
   tags: string[];
   link?: string;
   htmlContent?: string;
+  slug?: string;
 }
 
 export interface NavLink {

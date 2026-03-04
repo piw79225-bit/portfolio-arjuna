@@ -18,7 +18,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, onUpdate }) => {
   
   // CRUD Forms
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [workForm, setWorkForm] = useState<Partial<Project>>({ title: '', category: 'AI Specialist', description: '', image: '', tags: [], link: '', htmlContent: '' });
+  const [workForm, setWorkForm] = useState<Partial<Project>>({ title: '', category: 'AI Specialist', description: '', image: '', tags: [], link: '', htmlContent: '', slug: '' });
   const [expertiseForm, setExpertiseForm] = useState<Skill>({ name: '', level: 80, icon: 'fa-solid fa-code' });
   const [roleForm, setRoleForm] = useState<Partial<Role>>({ title: '', description: '', icon: 'fa-solid fa-user-gear' });
 
@@ -69,9 +69,10 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, onUpdate }) => {
     if (!workForm.title) return;
     setLoading(true);
     const id = editingId || Date.now().toString();
-    const newWork = { ...workForm, id, tags: workForm.tags?.length ? workForm.tags : ['Lab'] } as Project;
+    const slug = workForm.slug || workForm.title?.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    const newWork = { ...workForm, id, slug, tags: workForm.tags?.length ? workForm.tags : ['Lab'] } as Project;
     await contentService.saveWork(newWork);
-    setWorkForm({ title: '', category: 'AI Specialist', description: '', image: '', tags: [], link: '', htmlContent: '' });
+    setWorkForm({ title: '', category: 'AI Specialist', description: '', image: '', tags: [], link: '', htmlContent: '', slug: '' });
     setEditingId(null);
     await refreshData();
   };
@@ -270,6 +271,14 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, onUpdate }) => {
                   <input className="w-full bg-slate-900/50 border border-slate-800 rounded-xl px-4 py-3 text-sm" placeholder="Project Link" value={workForm.link} onChange={e => setWorkForm({...workForm, link: e.target.value})} />
                   
                   <div className="space-y-2">
+                    <label className="text-[10px] uppercase mono text-slate-500 font-black">Project Slug (URL Path)</label>
+                    <div className="flex gap-2">
+                      <span className="bg-slate-900 border border-slate-800 rounded-xl px-3 py-3 text-[10px] text-slate-500 mono flex items-center">/demo/</span>
+                      <input className="flex-1 bg-slate-900/50 border border-slate-800 rounded-xl px-4 py-3 text-sm" placeholder="my-project-url" value={workForm.slug} onChange={e => setWorkForm({...workForm, slug: e.target.value.toLowerCase().replace(/\s+/g, '-')})} />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
                     <label className="text-[10px] uppercase mono text-slate-500 font-black">Upload Portofolio HTML</label>
                     <input 
                       type="file" 
@@ -293,14 +302,20 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, onUpdate }) => {
 
                   <textarea className="w-full bg-slate-900/50 border border-slate-800 rounded-xl px-4 py-3 text-sm h-24" placeholder="Deskripsi" value={workForm.description} onChange={e => setWorkForm({...workForm, description: e.target.value})} />
                   <button onClick={handleSaveWork} disabled={loading} className="w-full py-4 bg-cyan-500 text-slate-950 font-black rounded-xl text-[10px] uppercase tracking-[0.2em]">Upload to Lab Cloud</button>
-                  {editingId && <button onClick={() => {setEditingId(null); setWorkForm({title:'', category:'AI Specialist', description:'', image:'', tags:[], link:'', htmlContent: ''})}} className="w-full py-2 text-slate-500 text-[10px] uppercase font-bold">Batal Edit</button>}
+                  {editingId && <button onClick={() => {setEditingId(null); setWorkForm({title:'', category:'AI Specialist', description:'', image:'', tags:[], link:'', htmlContent: '', slug: ''})}} className="w-full py-2 text-slate-500 text-[10px] uppercase font-bold">Batal Edit</button>}
                 </div>
               </div>
               <div className="col-span-8 space-y-4">
                 {works.map(w => (
                   <div key={w.id} className="glass p-4 rounded-2xl flex gap-6 items-center group">
-                    <img src={w.image} className="w-16 h-16 object-cover rounded-xl grayscale group-hover:grayscale-0 transition-all" />
-                    <div className="flex-1"><h4 className="font-bold uppercase text-sm">{w.title}</h4><span className="text-[9px] text-cyan-500 mono">{w.category}</span></div>
+                    <img src={w.image || undefined} className="w-16 h-16 object-cover rounded-xl grayscale group-hover:grayscale-0 transition-all" />
+                    <div className="flex-1">
+                      <h4 className="font-bold uppercase text-sm">{w.title}</h4>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[9px] text-cyan-500 mono">{w.category}</span>
+                        {w.slug && <a href={`/demo/${w.slug}`} target="_blank" rel="noreferrer" className="text-[9px] text-slate-500 hover:text-cyan-400 mono underline">/demo/{w.slug}</a>}
+                      </div>
+                    </div>
                     <div className="flex gap-2">
                       <button onClick={() => { setEditingId(w.id); setWorkForm(w); }} className="text-slate-500 hover:text-cyan-400 p-2"><i className="fa-solid fa-pen-nib"></i></button>
                       <button onClick={() => handleDeleteWork(w.id)} className="text-slate-500 hover:text-red-500 p-2"><i className="fa-solid fa-trash"></i></button>

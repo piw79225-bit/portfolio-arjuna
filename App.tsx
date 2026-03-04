@@ -61,7 +61,8 @@ const DynamicExpertise: React.FC<{ skills: Skill[], config: SiteSettings['expert
 );
 
 const App: React.FC = () => {
-  const [view, setView] = useState<'portfolio' | 'login' | 'dashboard'>('portfolio');
+  const [view, setView] = useState<'portfolio' | 'login' | 'dashboard' | 'demo'>('portfolio');
+  const [demoProject, setDemoProject] = useState<Project | null>(null);
   const [currentSection, setCurrentSection] = useState('hero');
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -95,22 +96,61 @@ const App: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleHash = () => {
+    const hash = window.location.hash;
+    const path = window.location.pathname;
+
+    if (path.startsWith('/demo/')) {
+      const slug = path.split('/demo/')[1];
+      const project = works.find(w => w.slug === slug || w.id === slug);
+      if (project) {
+        setDemoProject(project);
+        setView('demo');
+        return;
+      }
+    }
+
+    if (hash === '#admin') setView('login');
+    else if (hash === '#dashboard') setView('dashboard');
+    else { setView('portfolio'); }
+  };
+
   useEffect(() => {
     const auth = localStorage.getItem('arjuna_lab_auth');
     if (auth === 'true') setIsAdmin(true);
     syncWithCloud();
     
-    const handleHash = () => {
-      const hash = window.location.hash;
-      if (hash === '#admin') setView('login');
-      else if (hash === '#dashboard') setView('dashboard');
-      else { setView('portfolio'); }
-    };
-    
     window.addEventListener('hashchange', handleHash);
+    window.addEventListener('popstate', handleHash);
     handleHash();
-    return () => window.removeEventListener('hashchange', handleHash);
+    return () => {
+      window.removeEventListener('hashchange', handleHash);
+      window.removeEventListener('popstate', handleHash);
+    };
   }, []);
+
+  useEffect(() => {
+    handleHash();
+  }, [works]);
+
+  if (view === 'demo' && demoProject) {
+    return (
+      <div className="fixed inset-0 bg-white z-[9999]">
+        <iframe 
+          srcDoc={demoProject.htmlContent} 
+          title={demoProject.title} 
+          className="w-full h-full border-none"
+          sandbox="allow-scripts allow-forms allow-popups allow-modals"
+        />
+        <button 
+          onClick={() => { window.location.pathname = '/'; }}
+          className="fixed top-4 right-4 w-10 h-10 bg-slate-900/80 text-white rounded-full flex items-center justify-center hover:bg-red-500 transition-all z-[10000]"
+        >
+          <i className="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+    );
+  }
 
   if (view === 'login') return <Login onLogin={(s) => { if(s) { setIsAdmin(true); localStorage.setItem('arjuna_lab_auth', 'true'); window.location.hash = 'dashboard'; } }} />;
   if (view === 'dashboard') return <Dashboard onLogout={() => { setIsAdmin(false); localStorage.removeItem('arjuna_lab_auth'); window.location.hash = ''; }} onUpdate={syncWithCloud} />;
