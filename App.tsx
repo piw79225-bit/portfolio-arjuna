@@ -133,10 +133,13 @@ const App: React.FC = () => {
   }, [works]);
 
   if (view === 'demo' && demoProject) {
+    const isUrlDemo = demoProject.demoType === 'url' && demoProject.demoUrl;
+    
     return (
       <div className="fixed inset-0 bg-black z-[9999] overflow-hidden">
         <iframe 
-          srcDoc={demoProject.htmlContent} 
+          src={isUrlDemo ? demoProject.demoUrl : undefined}
+          srcDoc={!isUrlDemo ? demoProject.htmlContent : undefined} 
           title={demoProject.title} 
           className="w-full h-full border-none"
           sandbox="allow-scripts allow-forms allow-popups allow-modals allow-same-origin"

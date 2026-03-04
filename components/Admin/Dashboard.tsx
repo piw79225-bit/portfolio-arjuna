@@ -18,7 +18,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, onUpdate }) => {
   
   // CRUD Forms
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [workForm, setWorkForm] = useState<Partial<Project>>({ title: '', category: 'AI Specialist', description: '', image: '', tags: [], link: '', htmlContent: '', slug: '' });
+  const [workForm, setWorkForm] = useState<Partial<Project>>({ title: '', category: 'AI Specialist', description: '', image: '', tags: [], link: '', htmlContent: '', demoUrl: '', demoType: 'html', slug: '' });
   const [expertiseForm, setExpertiseForm] = useState<Skill>({ name: '', level: 80, icon: 'fa-solid fa-code' });
   const [roleForm, setRoleForm] = useState<Partial<Role>>({ title: '', description: '', icon: 'fa-solid fa-user-gear' });
 
@@ -72,7 +72,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, onUpdate }) => {
     const slug = workForm.slug || workForm.title?.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
     const newWork = { ...workForm, id, slug, tags: workForm.tags?.length ? workForm.tags : ['Lab'] } as Project;
     await contentService.saveWork(newWork);
-    setWorkForm({ title: '', category: 'AI Specialist', description: '', image: '', tags: [], link: '', htmlContent: '', slug: '' });
+    setWorkForm({ title: '', category: 'AI Specialist', description: '', image: '', tags: [], link: '', htmlContent: '', demoUrl: '', demoType: 'html', slug: '' });
     setEditingId(null);
     await refreshData();
   };
@@ -279,30 +279,62 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout, onUpdate }) => {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-[10px] uppercase mono text-slate-500 font-black">Upload Portofolio HTML</label>
-                    <input 
-                      type="file" 
-                      accept=".html" 
-                      onChange={handleHtmlUpload}
-                      className="w-full bg-slate-900/50 border border-slate-800 rounded-xl px-4 py-3 text-sm file:bg-cyan-500 file:border-none file:rounded-md file:text-[10px] file:font-black file:uppercase file:px-3 file:py-1 file:mr-4 file:cursor-pointer" 
-                    />
-                    {workForm.htmlContent && (
-                      <div className="flex items-center justify-between">
-                        <p className="text-[9px] text-green-500 mono">HTML Content Loaded ({workForm.htmlContent.length} chars)</p>
-                        <button 
-                          type="button"
-                          onClick={() => setWorkForm({ ...workForm, htmlContent: '' })}
-                          className="text-[9px] text-red-500 uppercase font-bold hover:underline"
-                        >
-                          Hapus HTML
-                        </button>
-                      </div>
-                    )}
+                    <label className="text-[10px] uppercase mono text-slate-500 font-black">Konfigurasi Demo</label>
+                    <div className="flex gap-2 p-1 bg-slate-900/50 border border-slate-800 rounded-xl">
+                      <button 
+                        type="button"
+                        onClick={() => setWorkForm({...workForm, demoType: 'html'})}
+                        className={`flex-1 py-2 text-[10px] font-black uppercase rounded-lg transition-all ${workForm.demoType === 'html' ? 'bg-cyan-500 text-slate-950' : 'text-slate-500 hover:text-slate-300'}`}
+                      >
+                        Upload HTML
+                      </button>
+                      <button 
+                        type="button"
+                        onClick={() => setWorkForm({...workForm, demoType: 'url'})}
+                        className={`flex-1 py-2 text-[10px] font-black uppercase rounded-lg transition-all ${workForm.demoType === 'url' ? 'bg-cyan-500 text-slate-950' : 'text-slate-500 hover:text-slate-300'}`}
+                      >
+                        External URL
+                      </button>
+                    </div>
                   </div>
+
+                  {workForm.demoType === 'html' ? (
+                    <div className="space-y-2">
+                      <label className="text-[10px] uppercase mono text-slate-500 font-black">Upload Portofolio HTML</label>
+                      <input 
+                        type="file" 
+                        accept=".html" 
+                        onChange={handleHtmlUpload}
+                        className="w-full bg-slate-900/50 border border-slate-800 rounded-xl px-4 py-3 text-sm file:bg-cyan-500 file:border-none file:rounded-md file:text-[10px] file:font-black file:uppercase file:px-3 file:py-1 file:mr-4 file:cursor-pointer" 
+                      />
+                      {workForm.htmlContent && (
+                        <div className="flex items-center justify-between">
+                          <p className="text-[9px] text-green-500 mono">HTML Content Loaded ({workForm.htmlContent.length} chars)</p>
+                          <button 
+                            type="button"
+                            onClick={() => setWorkForm({ ...workForm, htmlContent: '' })}
+                            className="text-[9px] text-red-500 uppercase font-bold hover:underline"
+                          >
+                            Hapus HTML
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      <label className="text-[10px] uppercase mono text-slate-500 font-black">Demo URL (Domain)</label>
+                      <input 
+                        className="w-full bg-slate-900/50 border border-slate-800 rounded-xl px-4 py-3 text-sm" 
+                        placeholder="https://my-demo-site.com" 
+                        value={workForm.demoUrl} 
+                        onChange={e => setWorkForm({...workForm, demoUrl: e.target.value})} 
+                      />
+                    </div>
+                  )}
 
                   <textarea className="w-full bg-slate-900/50 border border-slate-800 rounded-xl px-4 py-3 text-sm h-24" placeholder="Deskripsi" value={workForm.description} onChange={e => setWorkForm({...workForm, description: e.target.value})} />
                   <button onClick={handleSaveWork} disabled={loading} className="w-full py-4 bg-cyan-500 text-slate-950 font-black rounded-xl text-[10px] uppercase tracking-[0.2em]">Upload to Lab Cloud</button>
-                  {editingId && <button onClick={() => {setEditingId(null); setWorkForm({title:'', category:'AI Specialist', description:'', image:'', tags:[], link:'', htmlContent: '', slug: ''})}} className="w-full py-2 text-slate-500 text-[10px] uppercase font-bold">Batal Edit</button>}
+                  {editingId && <button onClick={() => {setEditingId(null); setWorkForm({title:'', category:'AI Specialist', description:'', image:'', tags:[], link:'', htmlContent: '', demoUrl: '', demoType: 'html', slug: ''})}} className="w-full py-2 text-slate-500 text-[10px] uppercase font-bold">Batal Edit</button>}
                 </div>
               </div>
               <div className="col-span-8 space-y-4">

@@ -8,6 +8,8 @@ export interface Project {
   tags: string[];
   link?: string;
   htmlContent?: string;
+  demoUrl?: string;
+  demoType?: 'html' | 'url';
   slug?: string;
 }
 
