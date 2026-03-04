@@ -3,7 +3,6 @@ import { Project, Skill } from './types';
 
 export const NAV_LINKS = [
   { label: 'Laboratorium', href: '#hero' },
-  { label: 'Tentang', href: '#about' },
   { label: 'Roles', href: '#roles' },
   { label: 'Expertise', href: '#expertise' },
   { label: 'Works', href: '#projects' },

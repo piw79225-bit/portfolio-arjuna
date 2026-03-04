@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header.tsx';
 import Hero from './components/Hero.tsx';
-import About from './components/About.tsx';
 import Projects from './components/Projects.tsx';
 import LabAssistant from './components/LabAssistant.tsx';
 import Login from './components/Admin/Login.tsx';
@@ -159,8 +158,6 @@ const App: React.FC = () => {
     switch (currentSection) {
       case 'hero':
         return <Hero settings={settings.hero} onNavigate={navigateTo} />;
-      case 'about':
-        return <div className="pt-20"><About settings={settings.about} /></div>;
       case 'roles':
         return <div className="pt-20"><DynamicRoles roles={roles} config={settings.roles} /></div>;
       case 'expertise':

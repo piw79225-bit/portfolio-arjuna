@@ -61,12 +61,6 @@ const Hero: React.FC<HeroProps> = ({ settings, onNavigate }) => {
               Jelajahi Portofolio <i className="fa-solid fa-arrow-right-long group-hover:translate-x-2 transition-transform"></i>
             </span>
           </button>
-          <button 
-            onClick={() => onNavigate('about')}
-            className="px-12 py-5 border border-slate-800 bg-slate-900/40 text-slate-200 font-bold rounded-full hover:bg-slate-800 hover:border-slate-600 transition-all uppercase tracking-widest text-sm backdrop-blur-md"
-          >
-            Spesifikasi Lab
-          </button>
         </div>
       </div>
 

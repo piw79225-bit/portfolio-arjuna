@@ -77,7 +77,7 @@ const Projects: React.FC<ProjectsProps> = ({ projects, config }) => {
                         href={`/demo/${project.slug || project.id}`}
                         className="flex items-center gap-2 text-cyan-400 text-xs font-black uppercase tracking-[0.2em] group/btn"
                       >
-                        <span>Live Demo</span>
+                        <span>Lihat Proyek</span>
                         <i className="fa-solid fa-laptop-code group-hover/btn:scale-110 transition-transform"></i>
                       </a>
                     )}
